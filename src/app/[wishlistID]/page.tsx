@@ -12,7 +12,7 @@ import {
   createWishlist,
 } from "@/utils/queries";
 import WishlistForm from "@/components/WishlistForm";
-import { useParams } from "next/navigation";
+import { useParams } from "next/navigation"; // useParams is always string
 
 function Submit() {
   const { pending } = useFormStatus();

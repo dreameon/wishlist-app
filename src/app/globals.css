@@ -5,11 +5,17 @@
   --foreground: #171717;
 }
 
-@theme inline {
+@layer base {
+}
+
+@layer components {
+}
+
+@theme {
+  --font-primary: Inter;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,9 +30,9 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
   font-family: Inter;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 label {
@@ -34,4 +40,39 @@ label {
   font-style: bold;
   font-size: 16px;
   line-height: 24px;
+}
+
+h1 {
+  font-family: Inter;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 48px; /* 150% */
+  letter-spacing: -0.352px;
+}
+
+h2 {
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 40px; /* 166.667% */
+  letter-spacing: -0.264px;
+}
+
+h6 {
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+}
+
+th {
+  text-align: start;
+}
+
+.ToggleGroupItem[data-state="on"] {
+  background-color: #28a4b1;
+  color: white;
 }

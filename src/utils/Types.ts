@@ -1,45 +1,72 @@
 export type Product = {
-  available: boolean;
-  body: string;
-  compare_at_price_max: string | null;
-  compare_at_price_min: string | null;
-  handle: string;
   id: number;
-  image: string;
-  price: string;
-  price_max: string;
-  price_min: string;
-  tags: string[];
   title: string;
-  type: string;
-  url: string;
-  variants: Variant[];
+  handle: string;
+  // body_html: string;
+  // published_at: string;
+  // created_at: string;
+  // updated_at: string;
   vendor: string;
-  featured_image: Image;
+  price: number;
+  product_type: string;
+  tags: string[];
+  variants: Variant[];
+  featured_image: string;
+  media: Media[];
+  options: { name: string; position: number; values: string[] }[];
 };
 
 export type Variant = {
-  available: boolean;
-  compare_at_price: string | null;
   id: number;
-  image: string | null;
-  price: string;
   title: string;
-  url: string;
-  featured_image: Image;
+  option1: string;
+  option2: string | null;
+  option3: string | null;
+  sku: string;
+  requires_shipping: boolean;
+  taxable: boolean;
+  featured_image: string | null;
+  available: boolean;
+  price: number;
+  grams: number;
+  compare_at_price: string | null;
+  position: number;
+  product_id: number;
+  created_at: string;
+  updated_at: string;
 };
 
 export type Image = {
+  id: number;
+  created_at: string;
+  position: number;
+  updated_at: string;
+  product_id: number;
+  variant_ids: number[];
+  src: string;
+  width: number;
+  height: number;
   alt: string | null;
-  aspect_ratio: number | null;
-  height: number | null;
-  url: string | null;
-  width: number | null;
 };
 
-export type WishlistItem = {
+export type Media = {
+  alt: string;
+  aspect_ratio: number;
   id: number;
-  title: string;
+  media_type: "image" | "video";
   src: string;
-  collection: string[];
+};
+
+export type Wish = {
+  wishlist_id: number;
+  wish_id: number;
+  title: string;
+  url: string;
+  note: string;
+  variants: { option: string; value: string }[];
+};
+
+export type VariantChosen = {
+  option: string;
+  value: string;
 };

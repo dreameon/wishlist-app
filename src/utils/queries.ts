@@ -1,4 +1,4 @@
-import { Product, Wish, VariantChosen } from "./types";
+import { Product, Wish, Wishlist, VariantChosen } from "./types";
 
 export async function fetchProduct(productURL: string): Promise<Product> {
   const response: Response = await fetch(`/api/data/?productURL=${productURL}`);
@@ -62,20 +62,34 @@ export async function deleteWish(wish: Wish) {
   return data;
 }
 
-export async function createWishlist(): Promise<{ id: number }> {
-  const response: Response = await fetch(`/api/wishlist/?action=new-wishlist`, {
-    method: "POST",
-  });
+export async function createWishlist(
+  wishlistTitle?: string
+): Promise<{ id: number }> {
+  const response: Response = await fetch(
+    `/api/wishlist/?action=new-wishlist&wishlist-title=${wishlistTitle}`,
+    {
+      method: "POST",
+    }
+  );
   const data: { id: number } = await response.json();
   return data;
 }
 
-export async function fetchWishlist(
-  wishlistID: string | undefined
-): Promise<Wish[]> {
+export async function fetchWishlist(wishlistID: string | undefined) {
   const response: Response = await fetch(`/api/wishlist/${wishlistID}/`, {
     method: "GET",
   });
-  const data: Wish[] = await response.json();
+  const data: { wishlist: Wishlist; wishes: Wish[] } = await response.json();
+  return data;
+}
+
+export async function fetchWishlists() {
+  const response: Response = await fetch(`/api/wishlist/`, {
+    method: "GET",
+  });
+  const data: {
+    title: string;
+    wishlist_id: number;
+  }[] = await response.json();
   return data;
 }

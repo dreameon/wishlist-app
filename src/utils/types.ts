@@ -70,3 +70,8 @@ export type VariantChosen = {
   option: string;
   value: string;
 };
+
+export type Wishlist = {
+  title: string;
+  wishlist_id: number;
+};

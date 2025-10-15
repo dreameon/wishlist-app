@@ -69,7 +69,7 @@ export async function GET(
 ) {
   const { wishlistID } = await params;
 
-  const wishlist = await db
+  const wishes = await db
     .selectFrom("wishes")
     .leftJoin("variants", "wishes.wish_id", "variants.wish_id")
     .select([
@@ -88,10 +88,16 @@ export async function GET(
     .groupBy("wishes.wish_id")
     .execute();
 
+  const wishlist = await db
+    .selectFrom("wishlists")
+    .select(["wishlist_id", "title"])
+    .where("wishlist_id", "=", Number(wishlistID))
+    .execute();
+
   // Get wishlist
   //   const wishlist =
   // await sql`SELECT wishes.wish_id, title, url, note , json_agg_strict(jsonb_strip_nulls(jsonb_build_object('option', option, 'value', value))) AS variants FROM wishes LEFT JOIN variants ON wishes.wish_id = variants.wish_id GROUP BY wishes.wish_id`;
-  return Response.json(wishlist);
+  return Response.json({ wishlist: wishlist[0], wishes: wishes });
 }
 
 export async function DELETE(

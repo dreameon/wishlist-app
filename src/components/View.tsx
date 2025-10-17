@@ -6,6 +6,8 @@ import WishlistItem from "@/components/WishlistItem";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { fetchWishlist } from "@/utils/queries";
 import URLSubmitter from "./URLSubmitter";
+import { PrimaryButton } from "./BaseComponents";
+import { Popover } from "radix-ui";
 
 export default function View({ wishlistID }: { wishlistID: number }) {
   //DONE: process variant information (productHandle?variant=variantID)
@@ -38,12 +40,27 @@ export default function View({ wishlistID }: { wishlistID: number }) {
   }
 
   return (
-    <div className="flex flex-col items-start grow min-h-screen gap-[32px] px-[32px] py-[32px]">
-      <URLSubmitter wishlistID={wishlistID} />
-      <h1 className="flex h-[128px] justify-center items-center self-stretch">
-        {wishlistTitle ?? `Wishlist ${wishlistID}`}
-      </h1>
-      <div className="flex gap-[24px] self-stretch flex-wrap">
+    <div className="flex flex-col grow items-start self-stretch min-h-screen gap-[40px] p-[16px]">
+      <div className="flex justify-between items-center self-stretch">
+        <h1 className="flex justify-center items-center self-stretch">
+          {wishlistTitle ?? `Wishlist ${wishlistID}`}
+        </h1>
+        <Popover.Root>
+          <Popover.Trigger asChild>
+            <PrimaryButton value="Add Wish" />
+          </Popover.Trigger>
+          <Popover.Portal>
+            <Popover.Content
+              sideOffset={8}
+              align="end"
+              className="absolute right-0"
+            >
+              <URLSubmitter wishlistID={wishlistID} />
+            </Popover.Content>
+          </Popover.Portal>
+        </Popover.Root>
+      </div>
+      <div className="gap-[16px] self-stretch grid grid-cols-4  ">
         {wishes.map((wish, index) => (
           <WishlistItem wish={wish} key={index} />
         ))}

@@ -8,7 +8,7 @@ export default function Home() {
   const [wishlistID, setWishlistID] = useState<number>();
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row grow self-stretch gap-[16px]">
       <SideNav onClick={setWishlistID} />
       {wishlistID ? (
         <View wishlistID={wishlistID} />

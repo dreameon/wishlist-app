@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PrimaryButton } from "./BaseComponents";
 import { Dialog } from "radix-ui";
 import WishForm from "@/components/WishForm";
 
@@ -13,28 +14,32 @@ export default function URLSubmitter({ wishlistID }: { wishlistID: number }) {
 
   return (
     <div>
-      <form className="flex flex-row self-stretch items-center justify-center gap-[16px]">
-        <label>Add item by URL</label>
-        <input
-          type="url"
-          name="wishURL"
-          value={wishURL}
-          onChange={(e) => setWishURL(e.target.value)}
-          className="border border-[#D8D8D8] rounded-[24px] px-[16px] py-[8px] h-[48px] w-[300px]"
-          required
-        />
-        <button
+      <form className="w-[827px] p-[24px] flex flex-col items-end justify-center gap-[24px] border-[1px] border-(--color-modal-border) bg-(--color-modal-bg) rounded-(--radius-xs) shadow-(--shadow)">
+        <div className="flex flex-col gap-[8px] items-start self-stretch">
+          <h6 className="text-(--color-text-tertiary)">
+            Enter a product page URL from any Shopify store to get started!
+          </h6>
+          <input
+            type="url"
+            name="wishURL"
+            value={wishURL}
+            onChange={(e) => setWishURL(e.target.value)}
+            className="flex p-[8px] items-start self-stretch bg-(--color-input-bg-default) border-[1px] rounded-(--radius-xs) border-(--color-input-border-default)"
+            required
+          />
+        </div>
+
+        <PrimaryButton
           onClick={handleSubmit}
-          className="clickable flex flex-col px-[24px] py-[8px] rounded-[16px] bg-[#B0E7ED] text-[12px]/[16px]"
-        >
-          Submit URL
-        </button>
+          value="Submit URL"
+          type="submit"
+        />
       </form>
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="DialogOverlay" />
-          <Dialog.Content className="DialogContent">
-            <Dialog.Title className="DialogTitle">Add a Wish</Dialog.Title>
+          <Dialog.Overlay className="bg-black/25 fixed inset-0" />
+          <Dialog.Content className="flex flex-col w-[912px] bg-(--color-modal-bg) rounded-(--radius-xs) absolute top-1/2 left-1/2 -translate-1/2 p-[24px] gap-[24px]">
+            <Dialog.Title className="">Add a Wish</Dialog.Title>
             <WishForm
               wishURL={wishURL}
               wishlistID={String(wishlistID)}

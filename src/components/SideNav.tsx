@@ -2,12 +2,9 @@ import { createWishlist, fetchWishlists } from "@/utils/queries";
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Wishlist } from "@/utils/types";
-import { Dialog } from "radix-ui";
+import { Dialog, ToggleGroup } from "radix-ui";
 import WishlistForm from "@/components/WishlistForm";
-
-function IconPlaceholder() {
-  return <div className="w-[128px] h-[128px] bg-[#D9D9D9]"></div>;
-}
+import { IconButton } from "./BaseComponents";
 
 function NewWishlistButton({
   onClick,
@@ -30,10 +27,9 @@ function NewWishlistButton({
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <button className="clickable flex flex-col px-[16px] py-[8px] rounded-[16px] bg-[#B0E7ED] text-[12px]/[16px] hover:bg-cyan-600">
-          Create New Wishlist
-        </button>
+        <IconButton path="M6 12H12M12 12H18M12 12V6M12 12V18" />
       </Dialog.Trigger>
+
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content className="DialogContent">
@@ -50,24 +46,26 @@ function NewWishlistButton({
 }
 
 // Interactive tile to click to display wishlist
-function WishlistTile({
+function SidebarItem({
   wishlist,
-  onClick,
-}: {
+  ...rest
+}: // onClick,
+{
   wishlist: Wishlist;
-  onClick: (wishlistID: number) => void;
+  // onClick: (wishlistID: number) => void;
 }) {
   const { title, wishlist_id } = wishlist;
 
   // Call handler (passed by Page) to change state of currently displayed wishlist
-  function handleClick() {
-    onClick(wishlist_id);
-  }
+  // function handleClick() {
+  //   onClick(wishlist_id);
+  // }
 
   return (
     <button
-      onClick={handleClick}
-      className="clickable flex justify-center h-[48px] items-center self-stretch px-[24px]"
+      // onClick={handleClick}
+      {...rest}
+      className="flex h-[48px] px-[8px] justify-start items-center self-stretch rounded-(--radius-xs) bg-(--color-sidebar-item-bg-default) hover:bg-(--color-sidebar-item-bg-hover) active:bg-(--color-sidebar-item-bg-down) data-[state=on]:bg-(--color-sidebar-item-bg-active) truncate"
     >
       {title ?? `Wishlist ${wishlist_id}`}
     </button>
@@ -98,16 +96,28 @@ export default function SideNav({
   }
 
   return (
-    <div className="flex flex-col gap-[48px] py-[64px] w-[256px] items-center bg-[#F2F2F2]">
-      <IconPlaceholder />
-      <div className="flex flex-col items-center self-stretch px-[16px] gap-[48px]">
+    <div className="flex flex-col self-stretch py-[24px] w-[234px] gap-[48px] shrink-0">
+      <div className="flex px-[8px] justify-between items-center self-stretch">
+        <h4>Your Wishlists</h4>
         <NewWishlistButton onClick={onClick} />
-        <div className="flex flex-col items-start self-stretch gap-[8px]">
-          {wishlists.map((wishlist, index) => (
-            <WishlistTile wishlist={wishlist} onClick={onClick} key={index} />
-          ))}
-        </div>
       </div>
+      <ToggleGroup.Root
+        type="single"
+        onValueChange={(wishlistID) => {
+          onClick(Number(wishlistID));
+        }}
+        className="flex flex-col grow items-start self-stretch gap-[8px]"
+      >
+        {wishlists.map((wishlist, index) => (
+          <ToggleGroup.Item
+            key={index}
+            value={String(wishlist.wishlist_id)}
+            asChild
+          >
+            <SidebarItem wishlist={wishlist} key={index} />
+          </ToggleGroup.Item>
+        ))}
+      </ToggleGroup.Root>
     </div>
   );
 }

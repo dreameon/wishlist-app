@@ -121,16 +121,16 @@ export default function WishlistItem({ wish }: { wish: Wish }) {
   }
 
   return (
-    <div className="flex flex-col rounded-[16px] overflow-hidden border border-[#D8D8D8] bg-[#FFFFFF] w-[240px] gap-[16px]">
+    <div className="flex flex-col rounded-(--radius-xs) p-[16px] border-[1px] border-(--color-card-border) bg-(--color-card-bg) hover:shadow-(--shadow) gap-[16px] shrink-0">
       <img
         src={product.featured_image}
         alt={
           product.media?.find((media) => media.src === product.featured_image)
             ?.alt
         }
-        className="w-auto h-[256px] object-cover"
+        className="rounded-(--radius-s) aspect-square object-cover"
       />
-      <div className="flex flex-col px-[16px] pb-[16px] gap-[16px]">
+      <div className="flex flex-col gap-[16px]">
         <div className="flex flex-col gap-[8px] self-stretch">
           <ProductTitle title={wish.title} />
           <ProductPrice
@@ -142,13 +142,13 @@ export default function WishlistItem({ wish }: { wish: Wish }) {
             }
           />
         </div>
-        <VariantInfo variants={wish.variants} />
-        <div className="flex flex-row gap-[8px] flex-wrap">
-          {/* {collection.map((collection, index) => (
+        {/* <VariantInfo variants={wish.variants} /> */}
+        {/* <div className="flex flex-row gap-[8px] flex-wrap">
+          {collection.map((collection, index) => (
             <CategoryChip key={index} collection={collection} />
-          ))} */}
-        </div>
-        <DeleteButton handleClick={handleDelete} />
+          ))}
+        </div> */}
+        {/* <DeleteButton handleClick={handleDelete} /> */}
       </div>
     </div>
   );

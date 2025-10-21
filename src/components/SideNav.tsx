@@ -1,10 +1,17 @@
-import { createWishlist, fetchWishlists } from "@/utils/queries";
+import {
+  createWishlist,
+  fetchWishlists,
+  updateWishlist,
+} from "@/utils/queries";
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Wishlist } from "@/utils/types";
-import { Dialog, ToggleGroup } from "radix-ui";
-import WishlistForm from "@/components/WishlistForm";
-import { IconButton } from "./BaseComponents";
+import { Dialog, ToggleGroup, DropdownMenu } from "radix-ui";
+import WishlistForm from "@/components/forms/WishlistForm";
+import Icon from "./Icon";
+import IconButton from "./buttons/IconButton";
+import DialogForm from "@/components/forms/DialogForm";
+import { WishlistDeleteForm } from "@/components/forms/WishlistDeleteForm";
 
 function NewWishlistButton({
   onClick,
@@ -25,50 +32,125 @@ function NewWishlistButton({
   });
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>
-        <IconButton path="M6 12H12M12 12H18M12 12V6M12 12V18" />
-      </Dialog.Trigger>
+    <>
+      <IconButton icon="plus" type="primary" onClick={() => setOpen(true)} />
+      <DialogForm
+        open={open}
+        setOpen={setOpen}
+        title="New Wishlist"
+        size="small"
+      >
+        <WishlistForm
+          setOpen={setOpen}
+          action="Create"
+          onSubmit={(title: string) => mutation.mutate(title)}
+        />
+      </DialogForm>
+    </>
+  );
+}
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="DialogOverlay" />
-        <Dialog.Content className="DialogContent">
-          <Dialog.Title className="DialogTitle">Create Wishlist</Dialog.Title>
-          <WishlistForm
-            onSubmit={(title: string) => {
-              mutation.mutate(title);
-            }}
-          />
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+function DropdownMenuItem(props: any) {
+  const { ...rest } = props;
+  return (
+    <DropdownMenu.Item
+      {...rest}
+      className="flex flex-row gap-[8px] justify-start items-center outline-0 pl-[8px] pr-[32px] py-[8px] hover:bg-(--color-dropdown-item-bg-hover) rounded-(--radius-xs) text-(--color-dropdown-item-text)"
+    >
+      {props.children}
+    </DropdownMenu.Item>
   );
 }
 
 // Interactive tile to click to display wishlist
-function SidebarItem({
-  wishlist,
-  ...rest
-}: // onClick,
-{
-  wishlist: Wishlist;
-  // onClick: (wishlistID: number) => void;
-}) {
+function SidebarItem({ wishlist, ...rest }: { wishlist: Wishlist }) {
   const { title, wishlist_id } = wishlist;
+  const [editModalOpen, setEditModalOpen] = useState(false); // For edit modal form
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false); // For delete modal form
 
-  // Call handler (passed by Page) to change state of currently displayed wishlist
-  // function handleClick() {
-  //   onClick(wishlist_id);
-  // }
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (wishlist: Wishlist) => updateWishlist(wishlist),
+    onSuccess: async (data) => {
+      setEditModalOpen(false);
+      await queryClient.invalidateQueries({ queryKey: ["wishlists"] }); // TODO: handle if deleted wishlist is currently open one
+    },
+  });
 
   return (
-    <button
-      // onClick={handleClick}
-      {...rest}
-      className="flex h-[48px] px-[8px] justify-start items-center self-stretch rounded-(--radius-xs) bg-(--color-sidebar-item-bg-default) hover:bg-(--color-sidebar-item-bg-hover) active:bg-(--color-sidebar-item-bg-down) data-[state=on]:bg-(--color-sidebar-item-bg-active) truncate"
-    >
-      {title ?? `Wishlist ${wishlist_id}`}
-    </button>
+    <>
+      <div
+        // onClick={handleClick}
+        {...rest}
+        className="flex h-[48px] px-[8px] hover:*:block text-(--color-sidebar-item-text) justify-between items-center self-stretch rounded-(--radius-xs) bg-(--color-sidebar-item-bg-default) hover:bg-(--color-sidebar-item-bg-hover) active:bg-(--color-sidebar-item-bg-down) data-[state=on]:bg-(--color-sidebar-item-bg-active) truncate"
+      >
+        {title ?? `Wishlist ${wishlist_id}`}
+        <DropdownMenu.Root modal={false}>
+          <DropdownMenu.Trigger asChild>
+            <IconButton
+              type="standard"
+              icon="ellipsis"
+              className="data-[state=open]:block hidden"
+              onClick={(e: MouseEvent) => e.stopPropagation()}
+            />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content className="relative p-[8px] flex flex-col justify-content border-[1px] border-(--color-modal-border) bg-(--color-modal-bg) rounded-(--radius-xs) shadow-(--shadow)">
+              <DropdownMenuItem
+                onClick={(e: MouseEvent) => {
+                  setEditModalOpen(true);
+                  e.stopPropagation();
+                }}
+              >
+                <Icon
+                  icon="pencil"
+                  size={16}
+                  strokeColor="stroke-(--color-dropdown-item-icon)"
+                />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(e: MouseEvent) => {
+                  setDeleteModalOpen(true);
+                  e.stopPropagation();
+                }}
+              >
+                <Icon
+                  icon="trash"
+                  size={16}
+                  strokeColor="stroke-(--color-dropdown-item-icon)"
+                />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
+      </div>
+      <DialogForm
+        open={editModalOpen}
+        setOpen={setEditModalOpen}
+        title="Edit Wishlist"
+        size="small"
+      >
+        <WishlistForm
+          wishlist={wishlist}
+          setOpen={setEditModalOpen}
+          action="Edit"
+          onSubmit={(wishlist: Wishlist) => {
+            mutation.mutate(wishlist);
+          }}
+        />
+      </DialogForm>
+
+      <DialogForm
+        open={deleteModalOpen}
+        setOpen={setDeleteModalOpen}
+        title="Delete Wishlist"
+        size="small"
+      >
+        <WishlistDeleteForm wishlist={wishlist} setOpen={setDeleteModalOpen} />
+      </DialogForm>
+    </>
   );
 }
 

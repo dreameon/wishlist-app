@@ -13,6 +13,7 @@ interface Database {
   wishlists: {
     wishlist_id: Generated<number>;
     title: string;
+    description: string | null;
   };
   users: {
     user_id: Generated<number>;

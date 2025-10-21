@@ -6,7 +6,7 @@ import WishlistItem from "@/components/WishlistItem";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { fetchWishlist } from "@/utils/queries";
 import URLSubmitter from "./URLSubmitter";
-import { PrimaryButton } from "./BaseComponents";
+import TextButton from "@/components/buttons/TextButton";
 import { Popover } from "radix-ui";
 
 export default function View({ wishlistID }: { wishlistID: number }) {
@@ -47,13 +47,15 @@ export default function View({ wishlistID }: { wishlistID: number }) {
         </h1>
         <Popover.Root>
           <Popover.Trigger asChild>
-            <PrimaryButton value="Add Wish" />
+            <TextButton type="button" variant="Primary">
+              Add Wish
+            </TextButton>
           </Popover.Trigger>
           <Popover.Portal>
             <Popover.Content
               sideOffset={8}
               align="end"
-              className="absolute right-0"
+              className="absolute right-0 w-[827px] p-[24px] flex flex-col justify-center border-[1px] border-(--color-modal-border) bg-(--color-modal-bg) rounded-(--radius-xs) shadow-(--shadow)"
             >
               <URLSubmitter wishlistID={wishlistID} />
             </Popover.Content>

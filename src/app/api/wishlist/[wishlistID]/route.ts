@@ -5,6 +5,7 @@ import { sql } from "kysely";
 
 // const sql = neon(`${process.env.DATABASE_URL}`);
 
+// Create new wish
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ wishlistID: string }> }
@@ -18,6 +19,7 @@ export async function POST(
     const productURL = searchParams.get("url");
     const variants: VariantChosen[] = await request.json();
 
+    // Insert wish into database
     if (variants.length != 0) {
       const post = await db
         .with("wish_insert", (db) =>
@@ -63,6 +65,7 @@ export async function POST(
   }
 }
 
+// Get wishlist and related wishes by wishlist ID
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ wishlistID: string }> }
@@ -86,20 +89,19 @@ export async function GET(
     ])
     .where("wishes.wishlist_id", "=", Number(wishlistID))
     .groupBy("wishes.wish_id")
+    .orderBy("wishes.wish_id", "asc")
     .execute();
 
   const wishlist = await db
     .selectFrom("wishlists")
-    .select(["wishlist_id", "title"])
+    .select(["wishlist_id", "title", "description"])
     .where("wishlist_id", "=", Number(wishlistID))
     .execute();
 
-  // Get wishlist
-  //   const wishlist =
-  // await sql`SELECT wishes.wish_id, title, url, note , json_agg_strict(jsonb_strip_nulls(jsonb_build_object('option', option, 'value', value))) AS variants FROM wishes LEFT JOIN variants ON wishes.wish_id = variants.wish_id GROUP BY wishes.wish_id`;
   return Response.json({ wishlist: wishlist[0], wishes: wishes });
 }
 
+// Delete wish by wish ID
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ wishlistID: string }> }

@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <QueryProvider>
-        <body className={` antialiased flex p-[24px] flex-col items-start`}>
+        <body className={` antialiased flex m-[24px] flex-col items-start`}>
           {children}
         </body>
       </QueryProvider>

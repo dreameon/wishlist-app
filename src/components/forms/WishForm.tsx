@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Product, VariantChosen } from "@/utils/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchProduct, postWish } from "@/utils/queries";
-import { ToggleGroup, Form } from "radix-ui";
-import { ToggleButton, FormField } from "./BaseComponents";
+import { ToggleGroup } from "radix-ui";
+import TextButton from "@/components/buttons/TextButton";
 
 function WishTitle({ title }: { title: string }) {
   return <h1>{title}</h1>;
@@ -34,18 +34,20 @@ function VariantChoice({
   onVariantClick: (variant: VariantChosen) => void;
 }) {
   return (
-    <div className="flex flex-row gap-[24px] max-w-full">
+    <div className="flex flex-row gap-[24px]">
       <div className="text-xs uppercase">{variantTitle}</div>
       <ToggleGroup.Root
         type="single"
-        className="flex flex-row gap-[8px] max-w-full"
+        className="flex flex-row gap-[8px] min-w-0 "
         onValueChange={(variantValue) => {
           onVariantClick({ option: variantTitle, value: variantValue });
         }}
       >
         {variantValues.map((variantValue, index) => (
           <ToggleGroup.Item key={index} value={variantValue} asChild>
-            <ToggleButton value={variantValue} className="" />
+            <TextButton variant="Toggle" type="button">
+              {variantValue}
+            </TextButton>
           </ToggleGroup.Item>
         ))}
       </ToggleGroup.Root>
@@ -62,7 +64,7 @@ function VariantForm({
 }) {
   return (
     product.variants[0].title != "Default Title" && (
-      <div className="flex flex-col gap-[8px] w-full">
+      <div className="flex flex-col gap-[8px]">
         <h6>Choose desired variant(s)</h6>
         {product.options.map((option) => (
           <VariantChoice
@@ -188,7 +190,7 @@ export default function WishForm({
   }
 
   return (
-    <div className="flex flex-row justify-start gap-[24px] self-stretch max-w-full">
+    <div className="flex flex-row justify-start gap-[24px] self-stretch">
       <img
         src={product.featured_image}
         alt={
@@ -197,7 +199,7 @@ export default function WishForm({
         }
         className="w-[256px] h-[256px] object-cover"
       />
-      <div className="flex flex-col gap-[24px] self-stretch">
+      <div className="flex flex-col gap-[24px] self-stretch min-w-0">
         <WishHeader
           title={product.title}
           price={
@@ -217,9 +219,6 @@ export default function WishForm({
           className="border border-[#D8D8D8] rounded-[16px] px-[16px] py-[8px] w-[300px]"
           required
         /> */}
-        <Form.Root>
-          <FormField name="Test" label="Test Field" />
-        </Form.Root>
 
         <button
           className="flex flex-col px-[16px] py-[8px] rounded-[16px] bg-[#B0E7ED] text-[12px]/[16px] hover:bg-cyan-600"

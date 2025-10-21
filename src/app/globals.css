@@ -127,15 +127,18 @@
   --color-button-toggle-bg-active: var(--mint-300);
   --color-button-toggle-bg-down: var(--mint-500);
 
-  --color-input-border-default: var(--white-600);
+  --color-input-border-default: var(--color-input-bg-default);
+  --color-input-border-hover: var(--white-600);
   --color-input-border-active: var(--mint-600);
   --color-input-bg-default: var(--white-500);
-  --color-input-bg-active: var(--mint-100);
+  --color-input-bg-active: var(--mint-50);
 
   --color-sidebar-item-bg-default: transparent;
   --color-sidebar-item-bg-hover: var(--mint-50);
   --color-sidebar-item-bg-active: var(--mint-100);
   --color-sidebar-item-bg-down: var(--mint-400);
+  --color-sidebar-item-text: var(--color-text-primary);
+  --color-sidebar-item-icon: var(--slate-300);
 
   --color-button-icon-bg-default: var(--color-button-primary-bg-default);
   --color-button-icon-bg-hover: var(--color-button-primary-bg-hover);
@@ -147,6 +150,10 @@
 
   --color-card-bg: var(--color-bg);
   --color-card-border: var(--white-600);
+
+  --color-dropdown-item-bg-hover: var(--white-500);
+  --color-dropdown-item-text: var(--color-text-secondary);
+  --color-dropdown-item-icon: var(--color-text-secondary);
 
   --shadow: 0 4px 16px 0 rgba(119, 124, 139, 0.16);
 }

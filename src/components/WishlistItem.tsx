@@ -1,4 +1,3 @@
-import { PropsWithChildren, use, useEffect, useState } from "react";
 import { Product, Wish } from "../utils/types";
 import { fetchProduct, deleteWish } from "@/utils/queries";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,17 +7,6 @@ function CategoryChip({ collection }: { collection: string }) {
     <div className="flex flex-col align-start px-[16px] py-[8px] rounded-[16px] border border-[#D8D8D8] bg-[#FFFFFF] text-[12px]/[16px] ">
       {collection}
     </div>
-  );
-}
-
-function DeleteButton({ handleClick }: { handleClick: () => void }) {
-  return (
-    <button
-      className="flex flex-col px-[16px] py-[8px] rounded-[16px] font-bold uppercase bg-[#E52020] text-[#FDFDFD] text-[12px]/[16px]"
-      onClick={handleClick}
-    >
-      Delete
-    </button>
   );
 }
 

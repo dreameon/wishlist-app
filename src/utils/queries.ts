@@ -87,9 +87,29 @@ export async function fetchWishlists() {
   const response: Response = await fetch(`/api/wishlist/`, {
     method: "GET",
   });
-  const data: {
-    title: string;
-    wishlist_id: number;
-  }[] = await response.json();
+  const data: Wishlist[] = await response.json();
+  return data;
+}
+
+export async function updateWishlist(wishlist: Wishlist) {
+  const response: Response = await fetch(`/api/wishlist/`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(wishlist),
+  });
+  const data: Wishlist = await response.json();
+  return data;
+}
+
+export async function deleteWishlist(wishlistID: number) {
+  const response: Response = await fetch(
+    `/api/wishlist/?wishlist-id=${wishlistID}`,
+    {
+      method: "DELETE",
+    }
+  );
+  const data = await response.json();
   return data;
 }

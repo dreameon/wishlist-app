@@ -74,4 +74,5 @@ export type VariantChosen = {
 export type Wishlist = {
   title: string;
   wishlist_id: number;
+  description: string | null;
 };

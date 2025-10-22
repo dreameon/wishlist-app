@@ -1,24 +1,15 @@
 type ButtonType = "submit" | "button" | "reset";
 
 function BaseButton({
-  type,
-  onClick = () => {
-    return;
-  },
   customStyle,
   children,
   ...rest
 }: {
-  type: ButtonType;
-  onClick?: (e: any) => void;
   customStyle: string;
-  children: React.ReactNode;
-}) {
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...rest}
-      type={type}
-      onClick={onClick}
       className={`min-w-0 clickable inline-flex h-(--size-s) px-[24px] content-center items-center rounded-(--radius-m) ${customStyle}`}
     >
       <p className="truncate">{children}</p>

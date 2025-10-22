@@ -4,18 +4,18 @@ function Label({ children }: { children: string }) {
   return <h6 className="text-(--color-text-tertiary)">{children}</h6>;
 }
 
-export default function FormField(props: any) {
-  const {
-    name,
-    label,
-  }: {
-    name: string;
-    label: string;
-    type: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    required?: boolean;
-  } = props;
+export default function FormField({
+  name,
+  label,
+  children,
+  ...rest
+}: {
+  name: string;
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  console.log("Rendering FormField for:", name);
   return (
     <Form.Field
       name={name}
@@ -24,7 +24,11 @@ export default function FormField(props: any) {
       <Form.Label asChild>
         <Label>{label}</Label>
       </Form.Label>
-      <Form.Control asChild>{props.children}</Form.Control>
+      <Form.Control asChild>{children}</Form.Control>
+      {/* Validation Messages */}
+      <Form.Message match="typeMismatch" className="text-(--color-error-text)">
+        Please provide a valid input.
+      </Form.Message>
     </Form.Field>
   );
 }

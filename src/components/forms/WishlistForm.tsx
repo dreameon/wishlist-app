@@ -45,7 +45,6 @@ export default function WishlistForm({
     <FormWrapper {...rest}>
       <FormField name="title" label="Title">
         <TextInput
-          name="wishlist-title"
           value={wishlistTitle}
           placeholder="Add a title"
           onChange={(e) => setWishlistTitle(e.target.value)}

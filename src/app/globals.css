@@ -98,6 +98,7 @@
   --color-text-tertiary: var(--slate-400);
   --color-text-disabled: var(--slate-200);
   --color-text-inverse: #ffffff;
+  --color-error-text: #ad1717;
 
   --color-bg: var(--background);
   --color-card-bg: var(--color-bg);
@@ -129,6 +130,7 @@
 
   --color-input-border-default: var(--color-input-bg-default);
   --color-input-border-hover: var(--white-600);
+  --color-input-border-invalid: var(--color-error-text);
   --color-input-border-active: var(--mint-600);
   --color-input-bg-default: var(--white-500);
   --color-input-bg-active: var(--mint-50);

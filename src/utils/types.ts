@@ -25,7 +25,12 @@ export type Variant = {
   sku: string;
   requires_shipping: boolean;
   taxable: boolean;
-  featured_image: string | null;
+  featured_image: {
+    id: number;
+    position: number;
+    src: string;
+    alt: string;
+  };
   available: boolean;
   price: number;
   grams: number;

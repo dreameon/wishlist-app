@@ -32,7 +32,7 @@ function NewWishlistButton({
   });
 
   return (
-    <>
+    <div>
       <IconButton icon="plus" type="primary" onClick={() => setOpen(true)} />
       <DialogForm
         open={open}
@@ -46,7 +46,7 @@ function NewWishlistButton({
           onSubmit={(title: string) => mutation.mutate(title)}
         />
       </DialogForm>
-    </>
+    </div>
   );
 }
 

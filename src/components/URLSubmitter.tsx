@@ -10,29 +10,49 @@ import DialogForm from "@/components/forms/DialogForm";
 export default function URLSubmitter({ wishlistID }: { wishlistID: number }) {
   const [open, setOpen] = useState(false); // For modal form
   const [wishURL, setWishURL] = useState<string>("");
+  const [urlError, setURLError] = useState<string | null>(null);
+
+  function ErrorMessage() {
+    return (
+      <div className="flex flex-col items-start self-stretch">
+        <p className="text-(--color-error-text)">{urlError}</p>
+      </div>
+    );
+  }
 
   function handleSubmit(e: React.FormEvent) {
+    try {
+      const isURL = new URL(wishURL);
+    } catch (_) {
+      e.preventDefault();
+      setURLError("Please enter a valid URL.");
+      return false;
+    }
     e.preventDefault();
+    setURLError(null);
     setOpen(true); // open the dialog
   }
 
   return (
     <div className="">
       <FormWrapper>
-        <FormField
-          name="url"
-          label="Enter a product page URL from any Shopify store to get started!"
-        >
-          <TextInput
+        <div className="flex flex-col gap-[4px] items-end self-stretch">
+          <FormField
             name="url"
-            value={wishURL}
-            placeholder="Add URL"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setWishURL(e.target.value)
-            }
-            required={true}
-          />
-        </FormField>
+            label="Enter a product page URL from any Shopify store to get started!"
+          >
+            <TextInput
+              value={wishURL}
+              placeholder="Add URL"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setWishURL(e.target.value)
+              }
+              required={true}
+              type="url"
+            />
+          </FormField>
+          {/* {urlError && <ErrorMessage />} */}
+        </div>
         <Form.Submit asChild>
           <TextButton variant="Primary" onClick={handleSubmit} type="submit">
             Submit URL

@@ -47,7 +47,6 @@ function VariantInfo({
 }
 
 export default function WishlistItem({ wish }: { wish: Wish }) {
-  // Duplicated code
   function findVariant() {
     if (product) {
       const optionPos = wish.variants.map(
@@ -56,7 +55,7 @@ export default function WishlistItem({ wish }: { wish: Wish }) {
             ?.position
       );
 
-      const variantRes = product.variants.find((variant) => {
+      const variantResult = product.variants.find((variant) => {
         const isVariantMatch = wish.variants.every((selectedVariant, index) => {
           if (optionPos[index] == 1) {
             return variant.option1 == selectedVariant.value;
@@ -73,7 +72,7 @@ export default function WishlistItem({ wish }: { wish: Wish }) {
         });
         return isVariantMatch;
       });
-      return variantRes;
+      return variantResult;
     }
   }
   // Refetch query upon submitting form
@@ -109,35 +108,42 @@ export default function WishlistItem({ wish }: { wish: Wish }) {
   }
 
   return (
-    <div className="flex flex-col rounded-(--radius-xs) p-[16px] border-[1px] border-(--color-card-border) bg-(--color-card-bg) hover:shadow-(--shadow) gap-[16px] shrink-0">
-      <img
-        src={product.featured_image}
-        alt={
-          product.media?.find((media) => media.src === product.featured_image)
-            ?.alt
-        }
-        className="rounded-(--radius-s) aspect-square object-cover"
-      />
-      <div className="flex flex-col gap-[16px]">
-        <div className="flex flex-col gap-[8px] self-stretch">
-          <ProductTitle title={wish.title} />
-          <ProductPrice
-            price={
-              product.options.length === wish.variants.length &&
-              product.variants[0].title != "Default Title"
-                ? `$${(findVariant()?.price! / 100).toFixed(2)}`
-                : `$${(product.price / 100).toFixed(2)}`
-            }
-          />
-        </div>
-        {/* <VariantInfo variants={wish.variants} /> */}
-        {/* <div className="flex flex-row gap-[8px] flex-wrap">
+    <a href={wish.url} target="_blank" rel="noopener noreferrer">
+      <div className="flex flex-col rounded-(--radius-xs) p-[16px] border-[1px] border-(--color-card-border) bg-(--color-card-bg) hover:shadow-(--shadow) gap-[16px] shrink-0">
+        <img
+          src={
+            product.options.length === wish.variants.length &&
+            product.variants[0].title != "Default Title"
+              ? `${findVariant()?.featured_image.src}`
+              : product.featured_image
+          }
+          alt={
+            product.media?.find((media) => media.src === product.featured_image)
+              ?.alt
+          }
+          className="rounded-(--radius-s) aspect-square object-cover"
+        />
+        <div className="flex flex-col gap-[16px]">
+          <div className="flex flex-col gap-[8px] self-stretch">
+            <ProductTitle title={wish.title} />
+            <ProductPrice
+              price={
+                product.options.length === wish.variants.length &&
+                product.variants[0].title != "Default Title"
+                  ? `$${(findVariant()?.price! / 100).toFixed(2)}`
+                  : `$${(product.price / 100).toFixed(2)}`
+              }
+            />
+          </div>
+          {/* <VariantInfo variants={wish.variants} /> */}
+          {/* <div className="flex flex-row gap-[8px] flex-wrap">
           {collection.map((collection, index) => (
             <CategoryChip key={index} collection={collection} />
           ))}
         </div> */}
-        {/* <DeleteButton handleClick={handleDelete} /> */}
+          {/* <DeleteButton handleClick={handleDelete} /> */}
+        </div>
       </div>
-    </div>
+    </a>
   );
 }

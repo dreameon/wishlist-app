@@ -6,6 +6,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchProduct, postWish } from "@/utils/queries";
 import { ToggleGroup } from "radix-ui";
 import TextButton from "@/components/buttons/TextButton";
+import { findVariant } from "@/utils/helpers";
+import FormWrapper from "./FormWrapper";
+import ToggleInput from "./inputs/ToggleInput";
+import FormField from "./FormField";
+import TextAreaInput from "./inputs/TextAreaInput";
 
 function WishTitle({ title }: { title: string }) {
   return <h1>{title}</h1>;
@@ -23,38 +28,6 @@ function WishHeader({ title, price }: { title: string; price: string }) {
   );
 }
 
-// Handles variant selection
-function VariantChoice({
-  variantTitle,
-  variantValues,
-  onVariantClick,
-}: {
-  variantTitle: string;
-  variantValues: string[];
-  onVariantClick: (variant: VariantChosen) => void;
-}) {
-  return (
-    <div className="flex flex-row gap-[24px]">
-      <div className="text-xs uppercase">{variantTitle}</div>
-      <ToggleGroup.Root
-        type="single"
-        className="flex flex-row gap-[8px] min-w-0 "
-        onValueChange={(variantValue) => {
-          onVariantClick({ option: variantTitle, value: variantValue });
-        }}
-      >
-        {variantValues.map((variantValue, index) => (
-          <ToggleGroup.Item key={index} value={variantValue} asChild>
-            <TextButton variant="Toggle" type="button">
-              {variantValue}
-            </TextButton>
-          </ToggleGroup.Item>
-        ))}
-      </ToggleGroup.Root>
-    </div>
-  );
-}
-
 function VariantForm({
   product,
   onVariantClick,
@@ -64,17 +37,24 @@ function VariantForm({
 }) {
   return (
     product.variants[0].title != "Default Title" && (
-      <div className="flex flex-col gap-[8px]">
-        <h6>Choose desired variant(s)</h6>
-        {product.options.map((option) => (
-          <VariantChoice
-            key={option.position}
-            variantValues={option.values}
-            variantTitle={option.name}
-            onVariantClick={onVariantClick}
-          ></VariantChoice>
-        ))}
-      </div>
+      <FormField
+        name="variants"
+        label="Choose Desired Variant(s)"
+        required={false}
+      >
+        <div className="flex flex-col gap-[8px]">
+          {product.options.map((option) => (
+            <ToggleInput
+              key={option.position}
+              options={option.values}
+              title={option.name}
+              onValueChange={(variantValue: string) => {
+                onVariantClick({ option: option.name, value: variantValue });
+              }}
+            />
+          ))}
+        </div>
+      </FormField>
     )
   );
 }
@@ -98,7 +78,8 @@ export default function WishForm({
   const productHandle = url.pathname; // e.g. "dosing-cup"
   const productURL = `${baseURL}${productHandle}`;
 
-  // TODO: update price and availability based on variant
+  // TODO: update availability based on variant
+  // TODO: add note functionality
 
   // Refetch query upon submitting form
   const queryClient = useQueryClient();
@@ -142,39 +123,14 @@ export default function WishForm({
     onSubmit(false); // open the dialog
   }
 
-  // Duplicated code
-  function findVariant() {
-    if (product) {
-      const optionPos = variants.map(
-        (selected) =>
-          product.options.find((option) => option.name === selected.option)
-            ?.position
-      );
-
-      const variantRes = product.variants.find((variant) => {
-        const isVariantMatch = variants.every((selectedVariant, index) => {
-          if (optionPos[index] == 1) {
-            return variant.option1 == selectedVariant.value;
-          } else if (optionPos[index] == 2) {
-            return variant.option2 == selectedVariant.value;
-          } else if (optionPos[index] == 3) {
-            return variant.option3 == selectedVariant.value;
-          } else {
-            console.log(
-              "An error has happened: option position not recognized."
-            );
-            return false;
-          }
-        });
-        return isVariantMatch;
-      });
-      return variantRes;
-    }
-  }
-
-  // Duplicated code
   // Fetch original product information for confirmation
-  const { isPending, isError, data, error, refetch } = useQuery({
+  const {
+    isPending,
+    isError,
+    data: productData,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["product", { productURL }],
     queryFn: () => fetchProduct(productURL),
   });
@@ -185,48 +141,64 @@ export default function WishForm({
     return `An error has occurred: ${error}`;
   }
   // Only update if anything has changed
-  if (product != data) {
-    setProduct(data);
+  if (product != productData) {
+    setProduct(productData);
   }
 
   return (
     <div className="flex flex-row justify-start gap-[24px] self-stretch">
       <img
-        src={product.featured_image}
-        alt={
-          product.media?.find((media) => media.src === product.featured_image)
-            ?.alt
+        src={
+          productData.options.length === variants.length &&
+          productData.variants[0].title != "Default Title"
+            ? `${findVariant(productData, variants)?.featured_image.src}`
+            : productData.featured_image
         }
-        className="w-[256px] h-[256px] object-cover"
+        alt={
+          productData.media?.find(
+            (media) => media.src === productData.featured_image
+          )?.alt
+        }
+        className="w-[400px] h-[400px] aspect-square object-cover"
       />
-      <div className="flex flex-col gap-[24px] self-stretch min-w-0">
+      <FormWrapper>
         <WishHeader
           title={product.title}
           price={
-            data.options.length === variants.length &&
-            data.variants[0].title != "Default Title"
-              ? `$${(findVariant()?.price! / 100).toFixed(2)}`
-              : `$${(data.price / 100).toFixed(2)}`
+            productData.options.length === variants.length &&
+            productData.variants[0].title != "Default Title"
+              ? `$${(findVariant(product, variants)?.price! / 100).toFixed(2)}`
+              : `$${(productData.price / 100).toFixed(2)}`
           }
         />
-        <VariantForm product={product} onVariantClick={handleClick} />
-        {/* <label>Add Categories</label>
-        <input
-          type="c"
-          name="wishURL"
-          value={wishURL}
-          onChange={(e) => setWishURL(e.target.value)}
-          className="border border-[#D8D8D8] rounded-[16px] px-[16px] py-[8px] w-[300px]"
-          required
-        /> */}
 
-        <button
-          className="flex flex-col px-[16px] py-[8px] rounded-[16px] bg-[#B0E7ED] text-[12px]/[16px] hover:bg-cyan-600"
-          onClick={addWish}
-        >
-          Add to Wishlist
-        </button>
-      </div>
+        <div className="flex flex-col grow self-stretch gap-[24px]">
+          <div className="flex grow self-stretch gap-[8px]">
+            <VariantForm product={product} onVariantClick={handleClick} />
+          </div>
+
+          <div className="flex grow self-stretch gap-[8px]">
+            <FormField name="notes" label="Note(s)" required={false}>
+              <TextAreaInput
+                value={note ?? ""}
+                placeholder="Add a note"
+                onChange={(e) => {
+                  setNote(e.target.value);
+                }}
+              />
+            </FormField>
+          </div>
+        </div>
+
+        <div className="flex flex-row gap-[16px] items-start">
+          <TextButton type="button" variant="Secondary" onClick={addWish}>
+            Cancel
+          </TextButton>
+          <TextButton type="submit" variant="Primary" onClick={addWish}>
+            Save
+          </TextButton>
+        </div>
+      </FormWrapper>
     </div>
   );
 }

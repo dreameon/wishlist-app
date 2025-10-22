@@ -3,6 +3,7 @@
 import { useState } from "react";
 import SideNav from "@/components/SideNav";
 import View from "@/components/View";
+import LoadingContainer from "@/components/LoadingContainer";
 
 export default function Home() {
   const [wishlistID, setWishlistID] = useState<number>();
@@ -13,10 +14,10 @@ export default function Home() {
       {wishlistID ? (
         <View wishlistID={wishlistID} />
       ) : (
-        <p>
-          No wishlist has been chosen yet. Please select a wishlist from the
-          left panel!
-        </p>
+        <LoadingContainer>
+          No wishlist has been chosen yet. Please select a wishlist or create a
+          new one from the left panel!
+        </LoadingContainer>
       )}
     </div>
   );

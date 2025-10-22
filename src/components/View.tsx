@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Wish, Wishlist } from "@/utils/types";
-import WishlistItem from "@/components/WishlistItem";
+import WishTile from "@/components/WishTile";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { fetchWishlist } from "@/utils/queries";
 import URLSubmitter from "./URLSubmitter";
 import TextButton from "@/components/buttons/TextButton";
 import { Popover } from "radix-ui";
+import LoadingContainer from "@/components/LoadingContainer";
 
 export default function View({ wishlistID }: { wishlistID: number }) {
   //DONE: process variant information (productHandle?variant=variantID)
@@ -22,10 +23,10 @@ export default function View({ wishlistID }: { wishlistID: number }) {
     queryFn: () => fetchWishlist(String(wishlistID)),
   });
   if (isPending) {
-    return "Loading...";
+    return <LoadingContainer>Loading...</LoadingContainer>;
   }
   if (isError) {
-    return "An error has occurred";
+    return <LoadingContainer>An error has occurred</LoadingContainer>;
   }
   // Only update if anything has changed
   if (wishes != data.wishes) {
@@ -64,7 +65,7 @@ export default function View({ wishlistID }: { wishlistID: number }) {
       </div>
       <div className="gap-[16px] self-stretch grid grid-cols-4  ">
         {wishes.map((wish, index) => (
-          <WishlistItem wish={wish} key={index} />
+          <WishTile wish={wish} key={index} />
         ))}
       </div>
     </div>

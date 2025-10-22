@@ -1,6 +1,7 @@
 import { Product, Wish } from "../utils/types";
 import { fetchProduct, deleteWish } from "@/utils/queries";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { findVariant } from "@/utils/helpers";
 
 function CategoryChip({ collection }: { collection: string }) {
   return (
@@ -11,11 +12,19 @@ function CategoryChip({ collection }: { collection: string }) {
 }
 
 function ProductTitle({ title }: { title: string }) {
-  return <div className="text-(--font-primary) text-base">{title}</div>;
+  return (
+    <div className="text-(--font-primary) text-[18px] leading-[24px] truncate text-base">
+      {title}
+    </div>
+  );
 }
 
 function ProductPrice({ price }: { price: string }) {
-  return <div className="text-(--font-primary) font-bold text-sm">{price}</div>;
+  return (
+    <div className="text-(--font-primary) text-[16px] leading-[24px] font-bold ">
+      {price}
+    </div>
+  );
 }
 
 function VariantInfo({
@@ -46,35 +55,7 @@ function VariantInfo({
   );
 }
 
-export default function WishlistItem({ wish }: { wish: Wish }) {
-  function findVariant() {
-    if (product) {
-      const optionPos = wish.variants.map(
-        (selected) =>
-          product.options.find((option) => option.name === selected.option)
-            ?.position
-      );
-
-      const variantResult = product.variants.find((variant) => {
-        const isVariantMatch = wish.variants.every((selectedVariant, index) => {
-          if (optionPos[index] == 1) {
-            return variant.option1 == selectedVariant.value;
-          } else if (optionPos[index] == 2) {
-            return variant.option2 == selectedVariant.value;
-          } else if (optionPos[index] == 3) {
-            return variant.option3 == selectedVariant.value;
-          } else {
-            console.log(
-              "An error has happened: option position not recognized."
-            );
-            return false;
-          }
-        });
-        return isVariantMatch;
-      });
-      return variantResult;
-    }
-  }
+export default function WishTile({ wish }: { wish: Wish }) {
   // Refetch query upon submitting form
   const queryClient = useQueryClient();
   const mutationDelete = useMutation({
@@ -101,7 +82,11 @@ export default function WishlistItem({ wish }: { wish: Wish }) {
   });
 
   if (isPending) {
-    return "Loading...";
+    return (
+      <div className="flex flex-col justify-center items-center rounded-(--radius-xs) p-[16px] border-[1px] border-(--color-card-border) bg-(--color-card-bg) hover:shadow-(--shadow) gap-[16px] shrink-0">
+        Loading...
+      </div>
+    );
   }
   if (isError) {
     return `An error has occurred: ${error}`;
@@ -114,7 +99,7 @@ export default function WishlistItem({ wish }: { wish: Wish }) {
           src={
             product.options.length === wish.variants.length &&
             product.variants[0].title != "Default Title"
-              ? `${findVariant()?.featured_image.src}`
+              ? `${findVariant(product, wish.variants)?.featured_image.src}`
               : product.featured_image
           }
           alt={
@@ -130,7 +115,9 @@ export default function WishlistItem({ wish }: { wish: Wish }) {
               price={
                 product.options.length === wish.variants.length &&
                 product.variants[0].title != "Default Title"
-                  ? `$${(findVariant()?.price! / 100).toFixed(2)}`
+                  ? `$${(
+                      findVariant(product, wish.variants)?.price! / 100
+                    ).toFixed(2)}`
                   : `$${(product.price / 100).toFixed(2)}`
               }
             />

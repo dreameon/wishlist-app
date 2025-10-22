@@ -10,7 +10,7 @@ function BaseButton({
   return (
     <button
       {...rest}
-      className={`min-w-0 clickable inline-flex h-(--size-s) px-[24px] content-center items-center rounded-(--radius-m) ${customStyle}`}
+      className={`min-w-0 clickable inline-flex h-(--size-s) px-[24px] content-center items-center rounded-(--radius-m)  ${customStyle}`}
     >
       <p className="truncate">{children}</p>
     </button>
@@ -61,7 +61,9 @@ export default function TextButton({
         type={type}
         onClick={onClick}
         {...rest}
-        customStyle="text-(--color-button-toggle-text) border-[1px] bg-(--color-button-toggle-bg-default) border-(--color-button-toggle-border-default) hover:bg-(--color-button-toggle-bg-hover) hover:border-(--color-button-toggle-border-active) active:bg-(--color-button-toggle-bg-down) active:border-(--color-button-toggle-border-active) data-[state=on]:bg-(--color-button-toggle-bg-active) data-[state=on]:border-(--color-button-toggle-border-active)"
+        customStyle="text-(--color-button-toggle-text) border-[1px] bg-(--color-button-toggle-bg-default) border-(--color-button-toggle-border-default) 
+        hover:bg-(--color-button-toggle-bg-hover) hover:border-(--color-button-toggle-border-active) hover:active:bg-(--color-button-toggle-bg-down) 
+        data-[state=on]:bg-(--color-button-toggle-bg-active) data-[state=on]:border-(--color-button-toggle-border-active)"
       />
     );
   }

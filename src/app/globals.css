@@ -98,7 +98,7 @@
   --color-text-tertiary: var(--slate-400);
   --color-text-disabled: var(--slate-200);
   --color-text-inverse: #ffffff;
-  --color-error-text: #ad1717;
+  --color-text-error: #ad1717;
 
   --color-bg: var(--background);
   --color-card-bg: var(--color-bg);
@@ -121,12 +121,12 @@
   --color-button-tertiary-bg-active: var(--color-button-secondary-bg-active);
 
   --color-button-toggle-border-default: var(--slate-100);
-  --color-button-toggle-border-active: var(--mint-700);
+  --color-button-toggle-border-active: var(--mint-600);
   --color-button-toggle-text: var(--color-text-primary);
   --color-button-toggle-bg-default: var(--white-300);
-  --color-button-toggle-bg-hover: var(--mint-100);
-  --color-button-toggle-bg-active: var(--mint-300);
-  --color-button-toggle-bg-down: var(--mint-500);
+  --color-button-toggle-bg-hover: var(--mint-50);
+  --color-button-toggle-bg-active: var(--mint-200);
+  --color-button-toggle-bg-down: var(--mint-400);
 
   --color-input-border-default: var(--color-input-bg-default);
   --color-input-border-hover: var(--white-600);
@@ -134,6 +134,7 @@
   --color-input-border-active: var(--mint-600);
   --color-input-bg-default: var(--white-500);
   --color-input-bg-active: var(--mint-50);
+  --color-input-text-invalid: var(--color-text-error);
 
   --color-sidebar-item-bg-default: transparent;
   --color-sidebar-item-bg-hover: var(--mint-50);

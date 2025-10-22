@@ -40,6 +40,7 @@ export default function URLSubmitter({ wishlistID }: { wishlistID: number }) {
           <FormField
             name="url"
             label="Enter a product page URL from any Shopify store to get started!"
+            validationMsg="Please enter a valid URL"
           >
             <TextInput
               value={wishURL}
@@ -51,7 +52,6 @@ export default function URLSubmitter({ wishlistID }: { wishlistID: number }) {
               type="url"
             />
           </FormField>
-          {/* {urlError && <ErrorMessage />} */}
         </div>
         <Form.Submit asChild>
           <TextButton variant="Primary" onClick={handleSubmit} type="submit">

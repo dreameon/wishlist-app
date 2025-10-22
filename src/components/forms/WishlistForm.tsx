@@ -43,24 +43,25 @@ export default function WishlistForm({
 
   return (
     <FormWrapper {...rest}>
-      <FormField name="title" label="Title">
-        <TextInput
-          value={wishlistTitle}
-          placeholder="Add a title"
-          onChange={(e) => setWishlistTitle(e.target.value)}
-          required
-        />
-      </FormField>
-      <FormField name="description" label="Description">
-        <TextAreaInput
-          name="description"
-          value={wishlistDescription ?? ""}
-          placeholder="Add a description (optional)"
-          onChange={(e) => {
-            setWishlistDescription(e.target.value);
-          }}
-        />
-      </FormField>
+      <div className="flex flex-col grow self-stretch gap-[24px]">
+        <FormField name="title" label="Title" required={true}>
+          <TextInput
+            value={wishlistTitle}
+            placeholder="Add a title"
+            onChange={(e) => setWishlistTitle(e.target.value)}
+            required
+          />
+        </FormField>
+        <FormField name="description" label="Description" required={false}>
+          <TextAreaInput
+            value={wishlistDescription ?? ""}
+            placeholder="Add a description (optional)"
+            onChange={(e) => {
+              setWishlistDescription(e.target.value);
+            }}
+          />
+        </FormField>
+      </div>
 
       {action === "Edit" && (
         <div className="flex flex-row gap-[16px] items-start">
